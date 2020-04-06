@@ -1,0 +1,14 @@
+{
+  "name": "scheme-tutorial",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {},
+  "keywords": [],
+  "author": "Jakub T. Jankiewicz <jcubic@onet.pl> (https://jcubic.pl/jakub-jankiewicz/)",
+  "license": "CC-BY-SA",
+  "dependencies": {
+    "@jcubic/lily": "^0.1.0",
+    "highlight.js": "^9.18.1",
+    "markdown-it": "^10.0.0"
+  }
+}

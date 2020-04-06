@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>{{TITLE}}</title>
+    <meta name="Description" content="{{DESCRIPTION}}"/>
+    <link rel="shortcut icon" href=""/>
+    <!--[if IE]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--
+    <link href="css/style.css" rel="stylesheet"/>
+    -->
+    <style>
+body, html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+
+}
+
+.term {
+	position: fixed;
+	bottom: 0;
+	height: 300px;
+	left: 0;
+	right: 0;
+}
+.terminal {
+	height: 100%;
+}
+main {
+	padding-bottom: 300px;
+	font-size: 20px;
+	line-height: 1.2em;
+	width: 80%;
+	margin: 0 auto;
+}
+    </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-coy.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+	<main>
+    {{CONTENT}}
+		<footer>Copright (c) <a href="https://jcubic.pl/">Jakub T. Jakiewicz</a> &mdash; <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA License</a></footer>
+	</main>
+	<section class="term">
+		<div></div>
+	</section>
+	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-polyfills/keyboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jcubic/lips@devel/dist/lips.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jcubic/lips@devel/examples/terminal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-scheme.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/jcubic/lips@devel/examples/prism.js"></script>
+  <script>
+   function formatBaner(banner) {
+       return banner.replace(/(\((?:env|help [^)]+)\))/g, '[[b;#fff;]$1]');
+   }
+   $.terminal.syntax("scheme");
+   var term = terminal({ selector: '.term div', dynamic: false, name: 'demo', lips });
+   var path = 'https://cdn.jsdelivr.net/gh/jcubic/lips@devel/';
+   term.exec([
+       '(load "' + path + 'lib/bootstrap.scm")',
+       '(load "' + path + 'lib/R5RS.scm")',
+       '(load "' + path + 'examples/helpers.scm")',
+       '(load "' + path + 'examples/defstruct.scm")'
+   ].join('\n'), true);
+   term.echo(formatBaner(lips.banner), { formatters: false });
+  </script>
+</body>
+</html>

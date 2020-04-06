@@ -1,0 +1,11 @@
+{
+	"authors": [
+		{
+			"name": "Jakub T. Jankiewicz",
+			"url": "https://jcubic.pl/",
+			"email": "jcubic@onet.pl"
+		}
+	],
+	"version": "0.0.1",
+	"title": "Interaktywny Kurs Programowania w Języku Scheme"
+}
