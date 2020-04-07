@@ -104,7 +104,7 @@ Java które było w języku LISP od samego początku.
 ```scheme
 ;;;
 ```
-## Zmienne i typy danych
+## Zmienne
 
 ```scheme
 (define x 10)
@@ -114,6 +114,9 @@ Dowolne znaki nawet +/*+ w jęzuku LISP i dialekcie
 scheme nie ma operatorów tak jak w innych językach
 zawsze jest to symbol który zawiera funkcje lub inny
 obiekt który można wywołać.
+
+Prawie każdy znak może być częścią nazwy
+np. `+--=/<>$%^&*` zmiennej.
 
 ## Funkcje / procedury
 
@@ -128,6 +131,8 @@ Jest to dokładnie to samo co:
 ```
 (define square (lambda (x) (* x x)))
 ```
+
+Lambda calculs Alonzo Church.
 
 lambda to specjalne wyrażenie które tworzy
 funkcje bez nazwy tutaj przypisujemy tą 
@@ -145,12 +150,24 @@ wartość, która zostanie zwrócona przez funkcje.
 Takie sam mechanizm jest zastosowany w językach
 Ruby i R.
 
+```scheme
+(define (+ a b) (* a b))
+(+ 1 2)
+```
+
+
+
 ## Instrukcje warunkowe if
 
 if wygląda jak funkcja ale nie jest to jednak
 zwykła funkcje jest to wyrażenie specjalne.
 
 Tak jak `define`.
+
+
+nie ma else
+
+begin wiele wyrażeń.
 
 ### Wartości Logiczne
 
@@ -163,18 +180,7 @@ Tak jak `define`.
 
 eq? eqv? equal?
 
-
 ## Symbole
-## Liczby (int float big num)
-
-### Operacje na liczbach
-
-(/ 1 2)
-complex
-float
-integer
-
-
 
 ## Łańcuchy znaków
 
@@ -219,13 +225,17 @@ Tak samo można utworzyć listę:
 
 Diagram.
 
+
+### Cytowanie
+
+
 ```scheme
 (define l '(1 2 3))
 (caddr l)
 (car (cdr (cdr l)))
 ```
 
-### Zwykłe Listy
+### Operacje na listach
 
 ```
 list?
@@ -240,27 +250,29 @@ list?
 
 assoc
 
-## Instrukcje warunkowe
+## Eval
+```scheme
+(define s (list '+ 4 7))
+(eval s)
+```
 
+## Liczby
 
-nie ma else
+### Operacje na liczbach
 
-begin wiele wyrażeń.
-
-### cond
-### case
-
-(define-macro (case var . body)
-	(let ((var-name (gensym)))
-		`(case 
+(/ 1 2)
+complex
+float
+integer
 
 ## Pętle
 
-Język scheme nie pętli jako takich, zazwyczaj stosuje się
+Język scheme nie ma pętli jako takich, zazwyczaj stosuje się
 [rekurencje](#funkcje-rekurencyjne) w celu tworzenia pętli.
-Można jednak utworzyć macro w celu stworzenia np. pętli `while` albo `for`.
+Można jednak utworzyć macro w celu stworzenia np. pętli `while` albo `for` przykłady takich makr
+podam później.
 
-### Funkcje rekurencyjne
+## Funkcje rekurencyjne
 Silnia
 Metoda Hornera obliczania Wielomianów
 
@@ -271,11 +283,11 @@ Metoda Hornera obliczania Wielomianów
       (+ (car args) (apply sum (cdr args)))))
 ```
 
-### Rekurencja Ogonowa ????
+## Rekurencja Ogonowa ????
 
 TODO
 
-### Funkcje wyższego rzędu (higher order procudure)
+## Funkcje wyższego rzędu (higher order procudure)
 
 Meta funkcje.
 
@@ -314,9 +326,13 @@ Meta funkcje.
 	    (iter result (cdr lst))))))
 ```
 
-### Funkcje anonimowe
+## Środowiska i zmienne lokalne
 
-### Domknięcia leksykalne
+```
+let, lambda
+```
+
+## Domknięcia leksykalne
 
 ```scheme
 (define (inc n)
@@ -327,13 +343,6 @@ Meta funkcje.
 
 funkcja `inc` jest wyższego rzędu i dodatkowo
 jest to domknięcie leksykalne.
-
-
-## Eval
-```scheme
-(define s (list '+ 4 7))
-(eval s)
-```
 
 ## Kontynuacje
 
@@ -363,6 +372,13 @@ W przypadku normalnych makr lispowych mając makro
 unless nie zadziała ono poprawnie, powyższe wyrażenie
 nie powinno zadziałać. Jednak gdy unless jest niehigieniczne. Napis zostanie wyświetlony ponieważ
 zmieniliśmy zachowanie makra z zewnątrz.
+
+### cond
+### case
+
+(define-macro (case var . body)
+	(let ((var-name (gensym)))
+		`(case 
 
 ### Makro rekurencyjne
 
