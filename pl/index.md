@@ -332,6 +332,14 @@ Meta funkcje.
 let, lambda
 ```
 
+```scheme
+(let ((x 10))
+  (define y (+ x x))
+  (display y))
+  
+(display y)
+```
+
 ## Domknięcia leksykalne
 
 ```scheme
@@ -339,6 +347,11 @@ let, lambda
   (lambda (x) (+ x n)))
   
 (map (inc 10) (list 1 2 3))
+```
+
+```scheme
+(define plus2 (inc 2))
+(map plus2 (list 1 2 3))
 ```
 
 funkcja `inc` jest wyższego rzędu i dodatkowo
@@ -358,7 +371,15 @@ jest to domknięcie leksykalne.
 (counter_2)
 (counter_2)
 (counter_2)
-```     
+```
+
+Funkcja która ma stan.
+
+Wykrzyknik mówi że funkcja zmienia stan.
+Aby zwócić uwagę poniewarz ma skutki uboczne
+i nie jest to zwykła funkcja matematyczna.
+
+## Implementacja Par za pomocą funkcji 
 
 ## Kontynuacje
 
@@ -409,5 +430,5 @@ zmieniliśmy zachowanie makra z zewnątrz.
 
 ## Strumienie
 
-
+Iteratory `yield`.
 
