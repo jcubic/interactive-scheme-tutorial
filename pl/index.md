@@ -344,6 +344,22 @@ let, lambda
 funkcja `inc` jest wyższego rzędu i dodatkowo
 jest to domknięcie leksykalne.
 
+```scheme
+(define (counter)
+  (let ((c 0))
+     (lambda ()
+        (set! c (+ c 1))
+        c)))
+
+(define counter_1 (counter))
+(counter_1)
+(counter_1)
+(define counter_2 (counter))
+(counter_2)
+(counter_2)
+(counter_2)
+```     
+
 ## Kontynuacje
 
 TODO:
