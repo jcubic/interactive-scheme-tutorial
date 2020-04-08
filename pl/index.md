@@ -46,6 +46,10 @@ Ponieżej proste wyrażenie:
 (+ 2 (* 4 5))
 ```
 
+Tak jak XML. Zauważ że brak przecinków,
+elementy oddzielone od siebie białymi nakami.
+
+
 Powyższy kod to jest lista który może być rozpatrywany także jak dane.
 
 tzm. lista którego pierwszy element to plus (nie operator dodwania tylko
@@ -116,7 +120,80 @@ zawsze jest to symbol który zawiera funkcje lub inny
 obiekt który można wywołać.
 
 Prawie każdy znak może być częścią nazwy
-np. `+--=/<>$%^&*` zmiennej.
+np. `+--=/<>$%^&*`.
+
+## Symbole
+
+(quote foo)
+
+'foo
+
+foo -> error
+
+## Listy
+
+```scheme
+(define l (list 1 2 3))
+(list? l)
+(define l '(1 2 3))
+```
+
+### Para cons car cdr
+
+```scheme
+(define pair (cons 10 20))
+(car pair)
+(cdr pair)
+(define l (cons 10 (cons 20 (cons 30 nil))))
+```
+
+Parę można utworzyć także w inny sposób tak
+jak listy 
+
+Listę można także utworzyć w inny sposób jako
+wartość zacytowana bezpośrednio
+
+```scheme
+'(1 . 2)
+```
+
+Tak samo można utworzyć listę:
+
+```scheme
+'(1 . (2 . (3 . nil)))
+```
+
+Diagram.
+
+### Operacje na listach
+
+```
+list?
+```
+
+`sort`
+
+`member`
+
+### Drzewa
+### Listy Asociacyjne
+
+assoc
+
+### Cytowanie
+
+
+```scheme
+(define l '(1 2 3))
+(caddr l)
+(car (cdr (cdr l)))
+```
+
+## Eval
+```scheme
+(define s (list '+ 4 7))
+(eval s)
+```
 
 ## Funkcje / procedury
 
@@ -180,81 +257,11 @@ begin wiele wyrażeń.
 
 eq? eqv? equal?
 
-## Symbole
-
 ## Łańcuchy znaków
 
 "this is \"quote\" string"
 
 musimy użyć slasha aby wstawić cudzysłów wewnątrz ciągu znaków.
-
-## Listy
-
-```scheme
-(define l (list 1 2 3))
-(list? l)
-(define l '(1 2 3))
-```
-
-quote
-
-### Para cons car cdr
-
-```scheme
-(define pair (cons 10 20))
-(car pair)
-(cdr pair)
-(define l (cons 10 (cons 20 (cons 30 nil))))
-```
-
-Parę można utworzyć także w inny sposób tak
-jak listy 
-
-Listę można także utworzyć w inny sposób jako
-wartość zacytowana bezpośrednio
-
-```scheme
-'(1 . 2)
-```
-
-Tak samo można utworzyć listę:
-
-```scheme
-'(1 . (2 . (3 . nil)))
-```
-
-Diagram.
-
-
-### Cytowanie
-
-
-```scheme
-(define l '(1 2 3))
-(caddr l)
-(car (cdr (cdr l)))
-```
-
-### Operacje na listach
-
-```
-list?
-```
-
-`sort`
-
-`member`
-
-### Drzewa
-### Listy Asociacyjne
-
-assoc
-
-## Eval
-```scheme
-(define s (list '+ 4 7))
-(eval s)
-```
 
 ## Liczby
 
@@ -379,7 +386,22 @@ Wykrzyknik mówi że funkcja zmienia stan.
 Aby zwócić uwagę poniewarz ma skutki uboczne
 i nie jest to zwykła funkcja matematyczna.
 
-## Implementacja Par za pomocą funkcji 
+## Implementacja Par za pomocą funkcji
+```scheme
+(define (mcons a b)
+  (lambda (cmd)
+    (if (equal? cmd 'car)
+        a
+        b)))
+
+(define (mcar pair) (pair 'car))
+(define (mcdr pair) (pair 'cdr))
+
+(define (mlist . args)
+  (if (null? args)
+      nil
+      (mcons (car args) (apply mlist (cdr args)))))
+```
 
 ## Kontynuacje
 
