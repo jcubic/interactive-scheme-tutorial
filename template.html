@@ -36,6 +36,20 @@ main {
 	width: 80%;
 	margin: 0 auto;
 }
+/* accessible hide
+ * https://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/
+ */
+header.main h1 {
+	position: absolute;
+  clip: rect(0 0 0 0);
+  height: 1px; width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+header.main img {
+	max-width: 100%;
+}
     </style>
 
     <link href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
@@ -43,6 +57,10 @@ main {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
+	<header class="main">
+		<h1>{{TITLE}}</h1>
+		<img src="../assets/banner.svg"/>
+	</header>
 	<main>
     {{CONTENT}}
 		<footer>Copright (c) <a href="https://jcubic.pl/">Jakub T. Jakiewicz</a> &mdash; <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA License</a></footer>
