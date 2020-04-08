@@ -8,7 +8,6 @@
   "license": "CC-BY-SA",
   "dependencies": {
     "@jcubic/lily": "^0.1.0",
-    "highlight.js": "^9.18.1",
     "markdown-it": "^10.0.0"
   }
 }

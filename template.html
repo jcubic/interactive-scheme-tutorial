@@ -11,7 +11,11 @@
     <!--
     <link href="css/style.css" rel="stylesheet"/>
     -->
+    <link href="https://unpkg.com/normalize.css" rel="stylesheet"/>
     <style>
+* {
+  box-sizing: border-box;
+}
 body, html {
 	height: 100%;
 	margin: 0;
@@ -49,6 +53,33 @@ header.main h1 {
 }
 header.main img {
 	max-width: 100%;
+}
+.anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+.anchor .octicon-link {
+    color: #1b1f23;
+    vertical-align: middle;
+    visibility: hidden;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	line-height: 1.2;
+}
+h1:hover .anchor .octicon-link,
+h2:hover .anchor .octicon-link,
+h3:hover .anchor .octicon-link,
+h4:hover .anchor .octicon-link,
+h5:hover .anchor .octicon-link,
+h6:hover .anchor .octicon-link {
+    visibility: visible;
 }
     </style>
 

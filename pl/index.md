@@ -17,7 +17,7 @@ Początkowo M-Expression
 
 w postaci `car[cons[A,B]]`
 
-
+```scheme
 (define (map fn x)
   (cond ((null? x) (quote ()))
         (#t (cons (fn (car x))
@@ -27,8 +27,7 @@ w postaci `car[cons[A,B]]`
   (map (lambda (y) (cons x y)) ys))
   
 (consall 'beat '(harvard yale))
-###
-
+```
 
 Trzeba się przyzwyczaić do nawiasów, ale po jakimś czasie nie ma z tym problemu.
 
