@@ -6,6 +6,7 @@
 			"email": "jcubic@onet.pl"
 		}
 	],
+	"lang": "Polski",
 	"version": {
 	  "translation": "0.0.1",
 	  "using": "0.1.0"
