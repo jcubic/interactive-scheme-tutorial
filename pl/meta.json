@@ -6,6 +6,9 @@
 			"email": "jcubic@onet.pl"
 		}
 	],
-	"version": "0.0.1",
+	"version": {
+	  "translation": "0.0.1",
+	  "using": "0.1.0"
+	},
 	"title": "Interaktywny Kurs Programowania w Języku Scheme"
 }

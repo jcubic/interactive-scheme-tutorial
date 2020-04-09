@@ -1,5 +1,13 @@
 # Interaktywny kurs języka Scheme Lisp
 
+<!--
+TODO:
+* restart terminal after modify of define
+* Rekurencja Ogonowa
+* Continuations
+* porty przez browserfs + service worker `__browserfs__`
+-->
+
 ## Spis Treści
 
 {{TOC}}
@@ -242,8 +250,6 @@ Ruby i R.
 (define lambda define)
 ```
 
-TODO: restart terminal
-
 ## Instrukcje warunkowe if
 
 if wygląda jak funkcja ale nie jest to jednak
@@ -300,9 +306,7 @@ Metoda Hornera obliczania Wielomianów
       (+ (car args) (apply sum (cdr args)))))
 ```
 
-## Rekurencja Ogonowa ????
 
-TODO
 
 ## Funkcje wyższego rzędu (higher order procudure)
 
@@ -413,13 +417,7 @@ i nie jest to zwykła funkcja matematyczna.
       (mcons (car args) (apply mlist (cdr args)))))
 ```
 
-## Kontynuacje
-
-TODO:
-
 ## Porty
-
-TODO: porty przez browserfs + service worker `__browserfs__`
 
 ## Makra lispowe
 

@@ -14,7 +14,8 @@ const md = require('markdown-it')({
         }
 
         return ''; // use external default escaping
-    }
+    },
+    html: true
 });
 
 function slugify(tokens) {
