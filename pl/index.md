@@ -232,6 +232,17 @@ Ruby i R.
 ```
 
 
+```scheme
+(lambda (x) (* x x))
+((lambda (x) (* x x)) 10)
+```
+
+```scheme
+(define define 10)
+(define lambda define)
+```
+
+TODO: restart terminal
 
 ## Instrukcje warunkowe if
 
