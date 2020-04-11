@@ -145,13 +145,51 @@ foo -> error
 (define l '(1 2 3))
 ```
 
+## Kod vs Dane
+
+Cecha charakterystyczna języków Lisp
+jest dualność kodu i danych.
+
+```scheme
+(+ 1 (* 2 3))
+```
+
+To jest kod, który oblicza wyrażenie
+artytmetyczne, poniżej to samo wyrażnie
+ale jako dane (trzy sposoby zapisu):
+
+```scheme
+(list '+ (list '* 2 3))
+
+(quote (+ 1 (* 2 3)))
+
+'(+ 1 (* 2 3))
+```
+
+Dane i kod są takim samym wyrażeniem
+używają list, jedyna różnica jest taka, że dane nie są wykonywane. Tego typu dane można wywołąć za pomocą eval.
+
+```scheme
+(eval '(+ 1 (* 2 3)))
+```
+
+Dzięki temu można używać funkcji, które
+operuja na listach i tworzyć wyrażenia,
+które potem zostaną wywołane. Można pisać programy, które piszą programy.
+
+Jest to główna siła mechanizmu, nazywana
+Makrami.
+
 ### Para cons car cdr
 
 ```scheme
 (define pair (cons 10 20))
 (car pair)
+;; ==> 10
 (cdr pair)
+;; ==> 20
 (define l (cons 10 (cons 20 (cons 30 nil))))
+;; ==> (10 20 30)
 ```
 
 Parę można utworzyć także w inny sposób tak
@@ -170,7 +208,10 @@ Tak samo można utworzyć listę:
 '(1 . (2 . (3 . nil)))
 ```
 
+
 Diagram.
+
+Funkcja `append`:
 
 ### Operacje na listach
 
@@ -420,6 +461,40 @@ i nie jest to zwykła funkcja matematyczna.
 ## Porty
 
 ## Makra lispowe
+
+Język scheme nie ma petli for. W prawie każdym nowoczesnym języku mamy konstrukcje tego typu jak np. język C, Java czy JavaScript.
+
+```javascript
+for (var i = 0; i < 10; ++i) {
+
+}
+```
+
+Mimo że język scheme nie ma tego typu konstrukcji, bardzo prosto jest ją
+dodać. Wystarczy użyć konstrukcji nazywaną makrem, które działa
+jak funkcja ale scheme zamiast obliczyć poszczególne argumenty i przekazać
+je do makra, jak to ma miejsce w przypadku funkcji przekazuje do makra
+kod w postaci danych, te dane mogą następnie być przetworzone i wynikowe
+dane są wywoływane przez interpreter języka Scheme.
+
+Przykład, przypuśćmy że mamy macro `for`, które zaraz napiszemy:
+
+```scheme
+(for (i 0 10)
+     (display i))
+```
+
+Jeśli for jest to makro a nie funkcji, interpreter nie wywoła funkjic o nazwie
+i, i nie przekaże wyniku tej funkcji ale dostanie takie wyrażenie:
+
+```scheme
+'((i 0 10) (display i))
+```
+
+Makro może dowolnie przetworzyć te dane i to co zwróci zostanie wywołane,
+więc wewnątrz makra możemy utworzyć pętlę używają konstrukcji które mamy
+dostępne, np. nazwanego let albo zwykłej funkcji rekurencyjnej.
+
 
 Makra higieniczne, nie będziemy ich omawiać.
 
