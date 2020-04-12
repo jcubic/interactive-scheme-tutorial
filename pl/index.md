@@ -462,7 +462,7 @@ i nie jest to zwykła funkcja matematyczna.
 
 ## Makra lispowe
 
-Język scheme nie ma petli for. W prawie każdym nowoczesnym języku mamy konstrukcje tego typu jak np. język C, Java czy JavaScript.
+Język scheme nie ma pętli for. W prawie każdym nowoczesnym języku mamy konstrukcje tego typu jak np. język C, Java czy JavaScript.
 
 ```javascript
 for (var i = 0; i < 10; ++i) {
@@ -483,6 +483,16 @@ Przykład, przypuśćmy że mamy macro `for`, które zaraz napiszemy:
 (for (i 0 10)
      (display i))
 ```
+
+Za pomocą konstrukcji quasiquote można utworzyć kod który się wywoła.
+
+```scheme
+`(begin ,@(map (lambda (pair) `(define ,@pair))
+               '((foo 10) (bar 20))))
+
+;; ==> (begin (define foo 10) (define bar 20))
+```
+
 
 Jeśli for jest to makro a nie funkcji, interpreter nie wywoła funkjic o nazwie
 i, i nie przekaże wyniku tej funkcji ale dostanie takie wyrażenie:
