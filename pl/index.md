@@ -477,6 +477,7 @@ je do makra, jak to ma miejsce w przypadku funkcji przekazuje do makra
 kod w postaci danych, te dane mogą następnie być przetworzone i wynikowe
 dane są wywoływane przez interpreter języka Scheme.
 
+
 Przykład, przypuśćmy że mamy macro `for`, które zaraz napiszemy:
 
 ```scheme
@@ -484,18 +485,8 @@ Przykład, przypuśćmy że mamy macro `for`, które zaraz napiszemy:
      (display i))
 ```
 
-Za pomocą konstrukcji quasiquote można utworzyć kod który się wywoła.
-
-```scheme
-`(begin ,@(map (lambda (pair) `(define ,@pair))
-               '((foo 10) (bar 20))))
-
-;; ==> (begin (define foo 10) (define bar 20))
-```
-
-
-Jeśli for jest to makro a nie funkcji, interpreter nie wywoła funkjic o nazwie
-i, i nie przekaże wyniku tej funkcji ale dostanie takie wyrażenie:
+Jeśli `for` jest to makro a nie funkcja, interpreter nie wywoła funkcji o nazwie
+`i` i nie przekaże wyniku tej funkcji, ale dostanie takie wyrażenie:
 
 ```scheme
 '((i 0 10) (display i))
@@ -505,25 +496,129 @@ Makro może dowolnie przetworzyć te dane i to co zwróci zostanie wywołane,
 więc wewnątrz makra możemy utworzyć pętlę używają konstrukcji które mamy
 dostępne, np. nazwanego let albo zwykłej funkcji rekurencyjnej.
 
+### Etapy tworzenia makra
 
-Makra higieniczne, nie będziemy ich omawiać.
+Makro można sobie rozdzielić na kilka etapów. Można zapisać sobie
+listę wejściowa jako dane i przetworzyć ją tak aby uzyskać kod jaki chcemy.
+
+Przykład:
+
+Za pomocą konstrukcji `quasiquote` można utworzyć kod jako listę:
 
 ```scheme
-(define-macro (unless cond . body)
-	`(if (not ,cond)
-  		 (begin
-				 	,@body)))
-
-(let ((not (lambda (x) x)))
-  (unless #t
-    (display "This should not be printed!")
-    (newline)))
+(map (lambda (pair)
+         `(define ,(car pair) ,(cadr pair)))
+   '((foo 10) (bar 20)))
+;; ==> ((define foo 10) (define bar 20))
 ```
 
-W przypadku normalnych makr lispowych mając makro 
-unless nie zadziała ono poprawnie, powyższe wyrażenie
-nie powinno zadziałać. Jednak gdy unless jest niehigieniczne. Napis zostanie wyświetlony ponieważ
-zmieniliśmy zachowanie makra z zewnątrz.
+Makro zawsze musi zwroócić jedno wyrażenie więc trzeba opakować je w `begin`:
+
+```scheme
+`(begin
+   ,@(map (lambda (pair)
+             `(define ,(car pair) ,(cadr pair)))
+          '((foo 10) (bar 20))))
+
+;; ==> (begin (define foo 10) (define bar 20))
+```
+
+Można to uprościć w ten sposób:
+
+```scheme
+`(begin
+     ,@(map (lambda (pair) `(define ,@pair))
+            '((foo 10) (bar 20))))
+
+```
+
+Aby utworzyć macro wystarczy użyć konstrukcji `define-macro` u wstawić
+nasz kod wewnątrz.
+
+
+```scheme
+(define-macro (deflet pairs)
+  `(begin
+     ,@(map (lambda (pair) `(define ,@pair))
+            pairs)))
+```
+
+Teraz można wywołać takie makro:
+
+```scheme
+(deflet ((foo 10) (bar 20)))
+```
+
+I mamy konstrukcję podobną do `let`, która wywołuje `define`.
+
+Przykład 2:
+
+```scheme
+(define-macro (for loop . body)
+   `(let iter ((,(car loop) ,(cadr loop)))
+       (if (<= ,(car loop) ,(caddr loop))
+          (begin
+             ,@body
+             (iter (+ ,(car loop) 1))))))
+```
+
+teraz można go użyć:
+
+```scheme
+(for (i 1 10)
+  (display i))
+```
+
+Problem z tą konstrukcją jest taki, że kod wewnętrzny makra wycieka na zewnątrz.
+Rozważ poniższy kod:
+
+```scheme
+(let ((iter (lambda (x) x)))
+    (for (i 1 10)
+       (display (iter i))))
+```
+
+Spowoduje to zawieszenie się programu ponieważ mając `(iter i)` nie wywołujemy
+naszej funkcji tylko nazwany let wewnątrz makra. Czasami tego typu makra są
+użyteczne (nazywają się makrami anaforycznymi) ale w tym przypadku jest to
+niepożądane. Aby to rozwiązać wystarczy nadać naszej nazwie identyfikator
+który zawsze będzie unikalny. Robi się to za pomocą funkcji `gensym`.
+
+```scheme
+(define-macro (for loop . body)
+   (let ((name (gensym)))
+     `(let ,name ((,(car loop) ,(cadr loop)))
+         (if (<= ,(car loop) ,(caddr loop))
+            (begin
+               ,@body
+               (,name (+ ,(car loop) 1)))))))
+```
+
+Wywołujemy kod (`let` z nazwą) zanim zwrócimy wynikową listę i wstawiamy tą nazwę, tam
+gdzie trzeba.
+
+Teraz możesz sprawdzić że to zadziała:
+
+```scheme
+(let ((iter (lambda (x) (- x 1))))
+   (for (i 1 10)
+        (display (iter i))))
+```
+
+Niestety nie zadziała to w każdym przypadku ponieważ mamy jeszcze takie konstrukcje
+jak `let,` `if` oraz `begin` które można nadpisać:
+
+```scheme
+(let ((begin (lambda ())))
+   (for (i 1 10)
+        (display i)))
+```
+
+Powyższy kod nie wyświetli nic. Okazuje się że w języku Scheme jest konstrukcja
+która umożliwia obejście tego ograniczenia. Są nią makra higieniczne.
+
+
+
 
 ### cond
 ### case
