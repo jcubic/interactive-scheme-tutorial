@@ -662,7 +662,7 @@ Przykład makra `for`:
                 (loop (+ var 1))))))))
 ```
 
-Różnica między makrami lispowymi a makrami higienicznymi jest taka że używają
+Różnica między makrami lispowymi a makrami higienicznymi jest taka, że używają
 języka wzorców (pattern language, pattern matching). Higieniczność jest zazwyczaj
 realizowana w taki sposób że wszystkie wolne symbole zostają zminione na inne
 nazwy, które nie powodują konfliktów. Można to osiągnąć np. poprzez zmianę nazw
@@ -709,12 +709,12 @@ traktować jako stałe operatory. Zazwyczaj lista jest pusta.
 
 ```scheme
 (define-syntax for
-  (syntax-rules ::: (==>)
-     ((_ (var start ==> end) body :::)
+  (syntax-rules (==>)
+     ((_ (var start ==> end) body ...)
       (let loop ((var start))
          (if (<= var end)
              (begin
-                body :::
+                body ...
                 (loop (+ var 1))))))))
 ```
 
@@ -738,14 +738,14 @@ wzorców, np.:
 
 ```scheme
 (define-syntax for
-  (syntax-rules ::: (==>)
-     ((_ (var start end) body :::)
-      (_ (var start ==> end) body :::))
-     ((_ (var start ==> end) body :::)
+  (syntax-rules (==>)
+     ((_ (var start end) body ...
+      (_ (var start ==> end) body ...))
+     ((_ (var start ==> end) body ...)
       (let loop ((var start))
          (if (<= var end)
              (begin
-                body :::
+                body ...
                 (loop (+ var 1))))))))
 ```
 
