@@ -671,10 +671,12 @@ wszystkich tych symboli na wartości gensym.
 Zbacz wynik tego wyrażenia:
 
 ```scheme
-(let ((begin (lambda ())))
-   (for (i 1 10)
-        (display i)
-        (newline)))
+(let ((begin (lambda ()))
+      (loop (lambda (i)
+               (display i)
+               (newline))))
+  (for (i 1 10)
+       (loop i)))
 ```
 
 Wynik będzie taki jak oczekujemy.
@@ -682,7 +684,7 @@ Wynik będzie taki jak oczekujemy.
 Makro syntax-rules definijuemy w ten spsób:
 
 Pierwszy argument jest opcjionalny (nie wszystkie implementacje go obsługują)
-Można go użyć ale zmienić symbol trzech kropek np.
+Można go użyć, aby zmienić symbol trzech kropek np.
 
 ```scheme
 (define-syntax for
@@ -703,7 +705,7 @@ w wynikowym rozwinięciu makra zostaje ono wstawione tak jakby było użyte `,@`
 
 Drugim argumentem `syntax-rules`, jest lista symboli specjalnych, które nie zostaną
 przetworzone przez makro, mogą one pojawić się w wywołaniu makra. Można je
-traktować jako stałe operatory.
+traktować jako stałe operatory. Zazwyczaj lista jest pusta.
 
 ```scheme
 (define-syntax for
@@ -727,9 +729,9 @@ Takie makro wywołujemy w ten sposób:
 
 Główną częścią makra jest ciało, czyli lista par wejscie - wyjście:
 
-Pierwsze wyrażenie jest to wejście pierwszy symbol jest to nazwa makra, może
-być dowolna zazwyczaj strosuje się nazwę makra albo symbol `_`. Następnie
-mamy wzorzeć wejściowy który zostanie dopasowany do wywołania makra.
+Pierwsze wyrażenie jest to lista wejściowa, a jego pierwszy symbol jest to nazwa
+makra, może być dowolna zazwyczaj stosuje się nazwę makra albo symbol `_`. Następnie
+mamy wzorzec wejściowy, który zostanie dopasowany do wywołania makra.
 Drugi element listy jest to wynikowy kod makra czyli to co zostanie wywołane
 gdy wzorzec zostanie dopasowany. Wewnątrz jednego marka można definiować wiele
 wzorców, np.:
@@ -748,8 +750,8 @@ wzorców, np.:
 ```
 
 Powyższe makro zawiera definicje rekurencyjną, gdy wywołujemy makro bez operatora
-`==>` zostanie wywołane makro z dodanym operatorem. Dzięki temu że nazwa
-marka jest zapisana jako `_` można go użyć w wynikowym rozwinięciu makra.
+`==>` zostanie wywołane makro z dodanym operatorem. Dzięki temu, że nazwa
+makra jest zapisana jako `_` można go użyć w wynikowym rozwinięciu makra.
 Dlatego aby zmienić nazwę makra wystarczy zmienić symbol w wyrażeniu `define-syntax`.
 
 ## Strumienie
