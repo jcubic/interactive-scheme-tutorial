@@ -475,7 +475,8 @@ dodać. Wystarczy użyć konstrukcji nazywaną makrem, które działa
 jak funkcja ale scheme zamiast obliczyć poszczególne argumenty i przekazać
 je do makra, jak to ma miejsce w przypadku funkcji przekazuje do makra
 kod w postaci danych, te dane mogą następnie być przetworzone i wynikowe
-dane są wywoływane przez interpreter języka Scheme.
+dane są wywoływane przez interpreter języka Scheme (zazwyczaj na etapie
+kompilacji).
 
 
 Przykład, przypuśćmy że mamy macro `for`, które zaraz napiszemy:
@@ -493,7 +494,7 @@ Jeśli `for` jest to makro a nie funkcja, interpreter nie wywoła funkcji o nazw
 ```
 
 Makro może dowolnie przetworzyć te dane i to co zwróci zostanie wywołane,
-więc wewnątrz makra możemy utworzyć pętlę używają konstrukcji które mamy
+więc wewnątrz makra możemy utworzyć pętlę używają konstrukcji, które mamy
 dostępne, np. nazwanego let albo zwykłej funkcji rekurencyjnej.
 
 ### Etapy tworzenia makra
@@ -512,7 +513,7 @@ Za pomocą konstrukcji `quasiquote` można utworzyć kod jako listę:
 ;; ==> ((define foo 10) (define bar 20))
 ```
 
-Makro zawsze musi zwroócić jedno wyrażenie więc trzeba opakować je w `begin`:
+Makro zawsze musi zwrócić jedno wyrażenie więc trzeba opakować je w `begin`:
 
 ```scheme
 `(begin
@@ -532,7 +533,7 @@ Można to uprościć w ten sposób:
 
 ```
 
-Aby utworzyć macro wystarczy użyć konstrukcji `define-macro` u wstawić
+Aby utworzyć macro wystarczy użyć konstrukcji `define-macro` i wstawić
 nasz kod wewnątrz.
 
 
@@ -566,7 +567,8 @@ teraz można go użyć:
 
 ```scheme
 (for (i 1 10)
-  (display i))
+  (display i)
+  (newline))
 ```
 
 Problem z tą konstrukcją jest taki, że kod wewnętrzny makra wycieka na zewnątrz.
@@ -575,12 +577,13 @@ Rozważ poniższy kod:
 ```scheme
 (let ((iter (lambda (x) x)))
     (for (i 1 10)
-       (display (iter i))))
+       (display (iter i))
+       (newline)))
 ```
 
 Spowoduje to zawieszenie się programu ponieważ mając `(iter i)` nie wywołujemy
 naszej funkcji tylko nazwany let wewnątrz makra. Czasami tego typu makra są
-użyteczne (nazywają się makrami anaforycznymi) ale w tym przypadku jest to
+użyteczne (nazywają się makrami anaforycznymi), ale w tym przypadku jest to
 niepożądane. Aby to rozwiązać wystarczy nadać naszej nazwie identyfikator
 który zawsze będzie unikalny. Robi się to za pomocą funkcji `gensym`.
 
@@ -602,7 +605,8 @@ Teraz możesz sprawdzić że to zadziała:
 ```scheme
 (let ((iter (lambda (x) (- x 1))))
    (for (i 1 10)
-        (display (iter i))))
+        (display (iter i))
+        (newline)))
 ```
 
 Niestety nie zadziała to w każdym przypadku ponieważ mamy jeszcze takie konstrukcje
@@ -611,21 +615,22 @@ jak `let,` `if` oraz `begin` które można nadpisać:
 ```scheme
 (let ((begin (lambda ())))
    (for (i 1 10)
-        (display i)))
+        (display i)
+        (newline)))
 ```
 
 Powyższy kod nie wyświetli nic. Okazuje się że w języku Scheme jest konstrukcja
 która umożliwia obejście tego ograniczenia. Są nią makra higieniczne.
 
 
-
-
 ### cond
 ### case
 
+```scheme
 (define-macro (case var . body)
 	(let ((var-name (gensym)))
 		`(case 
+```
 
 ### Makro rekurencyjne
 
@@ -637,6 +642,115 @@ która umożliwia obejście tego ograniczenia. Są nią makra higieniczne.
             (let-- ,(cdr pairs) ,@body))
           ,(cadar pairs))))
 ```
+
+## Makra higieniczne
+
+Makra higieniczne zdefiniowane w standadzie R5RS można utworzyć za pomocą,
+wyrażenie `syntax-rules` oraz jednego z wyrażeń które definiują makro
+tj. `define-syntax`, `let-syntax` lub `letrec-syntax`.
+
+Przykład makra `for`:
+
+```scheme
+(define-syntax for
+  (syntax-rules ()
+     ((_ (var start end) body ...)
+      (let loop ((var start))
+         (if (<= var end)
+             (begin
+                body ...
+                (loop (+ var 1))))))))
+```
+
+Różnica między makrami lispowymi a makrami higienicznymi jest taka że używają
+języka wzorców (pattern language, pattern matching). Higieniczność jest zazwyczaj
+realizowana w taki sposób że wszystkie wolne symbole zostają zminione na inne
+nazwy, które nie powodują konfliktów. Można to osiągnąć np. poprzez zmianę nazw
+wszystkich tych symboli na wartości gensym.
+
+Zbacz wynik tego wyrażenia:
+
+```scheme
+(let ((begin (lambda ())))
+   (for (i 1 10)
+        (display i)
+        (newline)))
+```
+
+Wynik będzie taki jak oczekujemy.
+
+Makro syntax-rules definijuemy w ten spsób:
+
+Pierwszy argument jest opcjionalny (nie wszystkie implementacje go obsługują)
+Można go użyć ale zmienić symbol trzech kropek np.
+
+```scheme
+(define-syntax for
+  (syntax-rules ::: ()
+     ((_ (var start end) body :::)
+      (let loop ((var start))
+         (if (<= var end)
+             (begin
+                body :::
+                (loop (+ var 1))))))))
+```
+
+W makrach higieniczny (typu `syntax-rules`) trzy kropki oraz symbol przed nimi
+są specjalnym znacznikiem, który działa podobnie do `,@` z makr lispowych
+ale odwrotnie. Wewnątrz zmiennej `body ...` (to wyrażnie trzeba traktować jak
+pojedyncza zmienna) znajdzie się lista wyrażeń. Wstawiając to wyrażenie
+w wynikowym rozwinięciu makra zostaje ono wstawione tak jakby było użyte `,@`.
+
+Drugim argumentem `syntax-rules`, jest lista symboli specjalnych, które nie zostaną
+przetworzone przez makro, mogą one pojawić się w wywołaniu makra. Można je
+traktować jako stałe operatory.
+
+```scheme
+(define-syntax for
+  (syntax-rules ::: (==>)
+     ((_ (var start ==> end) body :::)
+      (let loop ((var start))
+         (if (<= var end)
+             (begin
+                body :::
+                (loop (+ var 1))))))))
+```
+
+Takie makro wywołujemy w ten sposób:
+
+```scheme
+(let ((begin (lambda ())))
+   (for (i 1 ==> 10)
+        (display i)
+        (newline)))
+```
+
+Główną częścią makra jest ciało, czyli lista par wejscie - wyjście:
+
+Pierwsze wyrażenie jest to wejście pierwszy symbol jest to nazwa makra, może
+być dowolna zazwyczaj strosuje się nazwę makra albo symbol `_`. Następnie
+mamy wzorzeć wejściowy który zostanie dopasowany do wywołania makra.
+Drugi element listy jest to wynikowy kod makra czyli to co zostanie wywołane
+gdy wzorzec zostanie dopasowany. Wewnątrz jednego marka można definiować wiele
+wzorców, np.:
+
+```scheme
+(define-syntax for
+  (syntax-rules ::: (==>)
+     ((_ (var start end) body :::)
+      (_ (var start ==> end) body :::))
+     ((_ (var start ==> end) body :::)
+      (let loop ((var start))
+         (if (<= var end)
+             (begin
+                body :::
+                (loop (+ var 1))))))))
+```
+
+Powyższe makro zawiera definicje rekurencyjną, gdy wywołujemy makro bez operatora
+`==>` zostanie wywołane makro z dodanym operatorem. Dzięki temu że nazwa
+marka jest zapisana jako `_` można go użyć w wynikowym rozwinięciu makra.
+Dlatego aby zmienić nazwę makra wystarczy zmienić symbol w wyrażeniu `define-syntax`.
 
 ## Strumienie
 
