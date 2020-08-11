@@ -1,4 +1,4 @@
-# Interaktywny kurs języka Scheme Lisp
+# Interaktywny Kurs Języka Scheme - Dialektu Lispa
 
 <!--
 TODO:
