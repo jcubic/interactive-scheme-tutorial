@@ -154,8 +154,7 @@ jest dualność kodu i danych.
 (+ 1 (* 2 3))
 ```
 
-To jest kod, który oblicza wyrażenie
-artytmetyczne, poniżej to samo wyrażnie
+To jest kod, który oblicza wyrażenie artytmetyczne, poniżej to samo wyrażnie
 ale jako dane (trzy sposoby zapisu):
 
 ```scheme
@@ -165,6 +164,18 @@ ale jako dane (trzy sposoby zapisu):
 
 '(+ 1 (* 2 3))
 ```
+
+Pierwsze wyrażenie tworzy listę za pomocą funkcji list, każdy symbol, który
+nie jest liczbą trzeba cytować. W trzecim przypadku użyto symbolu specjalnego
+`'` jest on jednoznaczy (według specyfikacji języka Scheme) z drugim wyrażeniem.
+Zazwyczaj jest to implementowane w ten sposób że symbol `'` jest rozwiajny do
+postaci wywołania `quote`. Zobacz to wyrażenie
+
+```scheme
+''(+ 1 (* 2 3))
+```
+
+Podwójne cytowanie oznacza że zobaczymy co naprawde jest wynikiem cytowania.
 
 Dane i kod są takim samym wyrażeniem
 używają list, jedyna różnica jest taka, że dane nie są wykonywane. Tego typu dane można wywołąć za pomocą eval.
