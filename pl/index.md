@@ -681,10 +681,27 @@ Zbacz wynik tego wyrażenia:
 
 Wynik będzie taki jak oczekujemy.
 
+Inny przykład:
+
+```scheme
+(let ((var '()))
+  (for (i 0 10)
+       (set! var (cons i var)))
+  var)
+```
+
+Mimo że zmienna var jest użyta wewnątrz definicji makra możemy jej swobodnie używać
+gdy używamy marka.
+
 Makro syntax-rules definijuemy w ten spsób:
 
-Pierwszy argument jest opcjionalny (nie wszystkie implementacje go obsługują)
-Można go użyć, aby zmienić symbol trzech kropek np.
+Pierwszy argument jest opcjionalny (nie wszystkie implementacje go obsługują.
+Jest to rozszerzenie makr syntax-rules, które jest zefiniowane w dokumencie
+[SRFI-46](https://srfi.schemers.org/srfi-46/srfi-46.html), dokumenty te zawierają
+rozszerzenia języka, które moga być zaimplementowane przez implementecja.
+SRFI to skrót od Scheme Requests for Implementation).
+
+Można użyć tego rozszerzenia, aby zmienić symbol trzech kropek np.
 
 ```scheme
 (define-syntax for
