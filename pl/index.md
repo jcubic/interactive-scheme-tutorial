@@ -739,7 +739,7 @@ wzorców, np.:
 ```scheme
 (define-syntax for
   (syntax-rules (==>)
-     ((_ (var start end) body ...
+     ((_ (var start end) body ...)
       (_ (var start ==> end) body ...))
      ((_ (var start ==> end) body ...)
       (let loop ((var start))
