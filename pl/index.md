@@ -634,6 +634,31 @@ Powyższy kod nie wyświetli nic. Okazuje się że w języku Scheme jest konstru
 która umożliwia obejście tego ograniczenia. Są nią makra higieniczne.
 
 
+Poniżej jeszcze jeden przykład, trochę mało użyteczny, ale pokazuje jak można modyfikować kod:
+
+```scheme
+(define (tree-map f tree)
+  "(tree-map fn tree)
+
+   Tree version of map. Function is invoked on every leaf."
+  (if (pair? tree)
+      (cons (tree-map f (car tree)) (tree-map f (cdr tree)))
+      (f tree)))
+
+(define-macro (funky expr)
+   (tree-map (lambda (x)
+               (if (and (symbol? x) (eq? x '+)) '- x))
+             expr))
+
+(funky (+ 2 (+ 3 4)))
+```
+
+Makro funky modyfikuje kod, który do niego przekazujemy i zmienia wszystkie plusy na
+minusy. W taki sam sposób możesz modyfikować kod wejściowy przekazany do makra w dowolny
+sposób. Zauważ że nie ma wewnątrz makra cytowania, nie jest ono wymagane. Wymagane jest
+tylko to aby zwracać kod pod postacią danych, w tym przypadku już dostajemy kod, który
+modyfikujemy.
+
 ### cond
 ### case
 
@@ -695,13 +720,14 @@ Wynik będzie taki jak oczekujemy.
 Inny przykład:
 
 ```scheme
-(let ((var '()))
-  (for (i 0 10)
-       (set! var (cons i var)))
-  var)
+(define numbers (let ((var '()))
+                  (for (i 0 10)
+                       (set! var (cons i var)))
+                  (reverse var)))
+(display numbers)
 ```
 
-Mimo że zmienna var jest użyta wewnątrz definicji makra możemy jej swobodnie używać
+Mimo że zmienna var jest użyta wewnątrz definicji makra, możemy ją swobodnie używać
 gdy używamy marka.
 
 Makro syntax-rules definijuemy w ten spsób:
