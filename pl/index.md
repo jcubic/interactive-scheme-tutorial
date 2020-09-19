@@ -359,24 +359,76 @@ Metoda Hornera obliczania Wielomianów
 ```
 
 
-
 ## Funkcje wyższego rzędu (higher order procudure)
+
+Przypuśćmy, że musimy napisać funkcje które podwoi elementy w liście:
+
+```scheme
+(define (double-list l)
+  (if (null? l)
+      l
+      (cons (* (car l) 2) (double-list (cdr l)))))
+
+(double-list '(1 2 3))
+;; => (1 4 6)
+```
+
+Przypuśćmy że potem musimy napisać funkcje które podniesie funkcje do potęgi drugiej.
+
+```scheme
+(define (square-list l)
+  (if (null? l)
+      l
+      (cons (* (car l) (car l)) (square-list (cdr l)))))
+
+(square-list '(1 2 3))
+;; ==> (1 4 9)
+```
+
+Obie funkcje są prawie identyczne. Oto wygląd wzorca naszej funkcji:
+
+```scheme
+(define (<fn> l)
+  (if (null? l)
+      l
+      (cons (<op> (car l)) (<fn> (cdr l)))))
+```
+
+Można zapisać to jako funkcję, która przyjmuje funkcję jako argument.
+Funkcje które przyjmują inne funkcja jako argumenty i/lub zwracają funkcje
+nazywane są funkcjami wyższego rzędu, ponieważ operują na funkcja jak wartościach.
+
+Tak wygląda funkcja która generalizuje nasz wzorzec:
+
+```scheme
+(define (map <op> l)
+  (if (null? l)
+      l
+      (cons (<op> (car l)) (map <op> (cdr l)))))
+
+(map (lambda (x) (* x x)) '(1 2 3))
+;; ==> (1 4 9)
+```
+
+Ponieważ funkcja ta jest tak uniwersalna i użyteczna jest ona częścią języka Scheme.
+Wersja dostępna w scheme jest trochę bardziej rozbudowana ponieważ umożliwia
+przekazanie więcej niż jednej listy.
+
+```scheme
+(map + '(1 2 3) '(2 3 4))
+;; ==> (3 5 7)
+```
+
 
 Meta funkcje.
 
 ```scheme
-(define (map fn list)
-  (let iter ((list list) (result '()))
-    (if (null? list)
-        result
-        (iter (cdr list) (cons (fn (car list)) result)))))
-
 (define (values alist) (map cdr alist))
 (define (keys alist) (map car alist))
 (define (make-alist keys values) (map cons keys values))
 ```
 
-
+Inne użyteczne funkcje wyższego rzędu:
 
 
 ```scheme
@@ -391,13 +443,15 @@ Meta funkcje.
 ```scheme
 (define (filter fun lst)
   (let iter ((result '())
-	     (lst lst))
-    (if (null? lst) 
-	result
-	(if (fun (car lst))
-	    (iter (append result (list (car lst))) (cdr lst))
-	    (iter result (cdr lst))))))
+             (lst lst))
+    (if (null? lst)
+        result
+        (if (fun (car lst))
+            (iter (append result (list (car lst))) (cdr lst))
+            (iter result (cdr lst))))))
 ```
+
+
 
 ## Środowiska i zmienne lokalne
 
