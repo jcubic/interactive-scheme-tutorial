@@ -47,7 +47,7 @@ ale zamiast fn(x) robi się (fn x)
 
 
 
-Ponieżej proste wyrażenie:
+Poniżej proste wyrażenie:
 
 ```scheme
 (+ 2 (* 4 5))
@@ -129,6 +129,13 @@ obiekt który można wywołać.
 Prawie każdy znak może być częścią nazwy
 np. `+--=/<>$%^&*`.
 
+## Funkcje
+
+```scheme
+(define (foo x) x)
+(define foo (lambda (x) x))
+```
+
 ## Symbole
 
 (quote foo)
@@ -139,10 +146,31 @@ foo -> error
 
 ## Listy
 
+
 ```scheme
 (define l (list 1 2 3))
 (list? l)
 (define l '(1 2 3))
+```
+
+## Liczby
+
+Wieża typów liczbowych (ang. numerical tower), nie każda implementacja języka
+scheme obsługuje wszystkie rodzaje liczb. Nie jest to wymagane przez standard
+języka Scheme.
+
+```scheme
+(/ 1 2)
+1/2
+10+10i
+0.1
+```
+
+wymierne (rational), rzeczywiste (typu float), zespolone (complex).
+
+```
+exact?
+inexact?
 ```
 
 ## Kod vs Dane
