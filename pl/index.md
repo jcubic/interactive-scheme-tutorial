@@ -129,11 +129,63 @@ obiekt który można wywołać.
 Prawie każdy znak może być częścią nazwy
 np. `+--=/<>$%^&*`.
 
-## Funkcje
+## Funkcje / procedury
 
 ```scheme
 (define (foo x) x)
 (define foo (lambda (x) x))
+```
+
+Aby zdefiniować funkcje piszemy:
+
+```scheme
+(define (square x) (* x x)))
+```
+
+Jest to dokładnie to samo co:
+
+```scheme
+(define square (lambda (x) (* x x)))
+```
+
+Lambda calculs Alonzo Church.
+
+lambda to specjalne wyrażenie które tworzy
+funkcje bez nazwy tutaj przypisujemy tą 
+funkcję bez nazwy, która jest wartością
+tak jak zwykła liczba czy ciąg znaków i przypisujemy
+ją do zmiennej.
+
+
+Pierwszy przykład robi dokładnie to samo, tylko wymaga mniej kodu do napisania. 
+
+W odróżnieniu od języków takich jak C++ czy Java
+czy innych o podobnej składni nie trzeba pisać
+słowa kluczowego `return`. Ostatnie wyrażenie w danej funkcji jest to
+wartość, która zostanie zwrócona przez funkcje.
+Takie sam mechanizm jest zastosowany w językach
+Ruby i R.
+
+```scheme
+(define (+ a b) (* a b))
+(+ 1 2)
+```
+
+
+```scheme
+(lambda (x) (* x x))
+((lambda (x) (* x x)) 10)
+```
+
+```scheme
+(define define 10)
+(define lambda define)
+```
+
+### Recurencja
+
+```scheme
+(define (map fn lst) ...)
 ```
 
 ## Symbole
@@ -151,6 +203,64 @@ foo -> error
 (define l (list 1 2 3))
 (list? l)
 (define l '(1 2 3))
+```
+
+### Para cons car cdr
+
+```scheme
+(define pair (cons 10 20))
+(car pair)
+;; ==> 10
+(cdr pair)
+;; ==> 20
+(define l (cons 10 (cons 20 (cons 30 nil))))
+;; ==> (10 20 30)
+```
+
+NOTE: nil jest to zmienna która oznacza pustą listę, zmienna może nie być zdefiniowana.
+W takim wypadku wystarczy wywołać `(define nil '())`.
+
+Parę można utworzyć także w inny sposób tak jak listy. 
+
+Listę można także utworzyć w inny sposób jako
+wartość zacytowana bezpośrednio
+
+```scheme
+'(1 . 2)
+```
+
+Tak samo można utworzyć listę:
+
+```scheme
+'(1 . (2 . (3 . nil)))
+```
+
+
+Diagram.
+
+Funkcja `append`:
+
+### Operacje na listach
+
+```
+list?
+```
+
+`sort`
+
+`member`
+
+```scheme
+(define (tree-map fn data)
+  (if (pair? data)
+      (cons (tree-map fn (car data))
+            (tree-map fn (cdr data)))
+      (fn data)))
+
+(define (replace a b) (lambda (atom) (if (equal? atom a) b atom)))
+
+(tree-map (replace 'foo 'HEY) '(1 2 3 (foo bar (foo baz))))
+;; ==> (1 2 3 (HEY bar (HEY baz)))
 ```
 
 ## Liczby
@@ -219,50 +329,6 @@ które potem zostaną wywołane. Można pisać programy, które piszą programy.
 Jest to główna siła mechanizmu, nazywana
 Makrami.
 
-### Para cons car cdr
-
-```scheme
-(define pair (cons 10 20))
-(car pair)
-;; ==> 10
-(cdr pair)
-;; ==> 20
-(define l (cons 10 (cons 20 (cons 30 nil))))
-;; ==> (10 20 30)
-```
-
-NOTE: nil jest to zmienna która oznacza pustą listę, zmienna może nie być zdefiniowana.
-W takim wypadku wystarczy wywołać `(define nil '())`.
-
-Parę można utworzyć także w inny sposób tak jak listy. 
-
-Listę można także utworzyć w inny sposób jako
-wartość zacytowana bezpośrednio
-
-```scheme
-'(1 . 2)
-```
-
-Tak samo można utworzyć listę:
-
-```scheme
-'(1 . (2 . (3 . nil)))
-```
-
-
-Diagram.
-
-Funkcja `append`:
-
-### Operacje na listach
-
-```
-list?
-```
-
-`sort`
-
-`member`
 
 ### Drzewa
 ### Listy Asociacyjne
@@ -284,53 +350,7 @@ assoc
 (eval s)
 ```
 
-## Funkcje / procedury
 
-Aby zdefiniować funkcje piszemy:
-
-```scheme
-(define (square x) (* x x)))
-```
-
-Jest to dokładnie to samo co:
-
-```scheme
-(define square (lambda (x) (* x x)))
-```
-
-Lambda calculs Alonzo Church.
-
-lambda to specjalne wyrażenie które tworzy
-funkcje bez nazwy tutaj przypisujemy tą 
-funkcję bez nazwy, która jest wartością
-tak jak zwykła liczba czy ciąg znaków i przypisujemy
-ją do zmiennej.
-
-
-Pierwszy przykład robi dokładnie to samo, tylko wymaga mniej kodu do napisania. 
-
-W odróżnieniu od języków takich jak C++ czy Java
-czy innych o podobnej składni nie trzeba pisać
-słowa kluczowego `return`. Ostatnie wyrażenie w danej funkcji jest to
-wartość, która zostanie zwrócona przez funkcje.
-Takie sam mechanizm jest zastosowany w językach
-Ruby i R.
-
-```scheme
-(define (+ a b) (* a b))
-(+ 1 2)
-```
-
-
-```scheme
-(lambda (x) (* x x))
-((lambda (x) (* x x)) 10)
-```
-
-```scheme
-(define define 10)
-(define lambda define)
-```
 
 ## Instrukcje warunkowe if
 
