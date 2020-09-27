@@ -101,15 +101,8 @@ h6:hover .anchor .octicon-link {
 		<div></div>
 	</section>
 	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/js-polyfills/keyboard.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jcubic/lips@devel/dist/lips.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jcubic/lips@devel/examples/terminal.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/prism.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-scheme.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/gh/jcubic/lips@devel/examples/prism.js"></script>
+	<script src="https://cdn.jsdelivr.net/combine/npm/js-polyfills/keyboard.js,npm/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/combine/npm/jquery.terminal/js/jquery.terminal.min.js,gh/jcubic/lips@devel/dist/lips.min.js,gh/jcubic/lips@devel/lib/js/terminal.js,npm/prismjs/prism.js,npm/jquery.terminal/js/prism.js,npm/prismjs/components/prism-scheme.min.js,gh/jcubic/lips@devel/lib/js/prism.js"></script>
   <script>
    function formatBaner(banner) {
        return banner.replace(/(\((?:env|help [^)]+)\))/g, '[[b;#fff;]$1]');
@@ -120,8 +113,7 @@ h6:hover .anchor .octicon-link {
    term.exec([
        '(load "' + path + 'lib/bootstrap.scm")',
        '(load "' + path + 'lib/R5RS.scm")',
-       '(load "' + path + 'examples/helpers.scm")',
-       '(load "' + path + 'examples/defstruct.scm")'
+       '(load "' + path + 'lib/R7RS.scm")'
    ].join('\n'), true);
    term.echo(formatBaner(lips.banner), { formatters: false });
   </script>

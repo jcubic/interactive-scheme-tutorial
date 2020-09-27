@@ -231,8 +231,10 @@ Makrami.
 ;; ==> (10 20 30)
 ```
 
-Parę można utworzyć także w inny sposób tak
-jak listy 
+NOTE: nil jest to zmienna która oznacza pustą listę, zmienna może nie być zdefiniowana.
+W takim wypadku wystarczy wywołać `(define nil '())`.
+
+Parę można utworzyć także w inny sposób tak jak listy. 
 
 Listę można także utworzyć w inny sposób jako
 wartość zacytowana bezpośrednio
@@ -286,13 +288,13 @@ assoc
 
 Aby zdefiniować funkcje piszemy:
 
-```
+```scheme
 (define (square x) (* x x)))
 ```
 
 Jest to dokładnie to samo co:
 
-```
+```scheme
 (define square (lambda (x) (* x x)))
 ```
 
@@ -890,7 +892,7 @@ Inny przykład:
 ```
 
 Mimo że zmienna var jest użyta wewnątrz definicji makra, możemy ją swobodnie używać
-gdy używamy marka.
+gdy używamy makra.
 
 Makro syntax-rules definijuemy w ten spsób:
 
@@ -949,7 +951,7 @@ Pierwsze wyrażenie jest to lista wejściowa, a jego pierwszy symbol jest to naz
 makra, może być dowolna zazwyczaj stosuje się nazwę makra albo symbol `_`. Następnie
 mamy wzorzec wejściowy, który zostanie dopasowany do wywołania makra.
 Drugi element listy jest to wynikowy kod makra czyli to co zostanie wywołane
-gdy wzorzec zostanie dopasowany. Wewnątrz jednego marka można definiować wiele
+gdy wzorzec zostanie dopasowany. Wewnątrz jednego makra można definiować wiele
 wzorców, np.:
 
 ```scheme
