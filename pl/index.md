@@ -263,6 +263,11 @@ list?
 ;; ==> (1 2 3 (HEY bar (HEY baz)))
 ```
 
+### Drzewa
+### Listy Asociacyjne
+
+assoc
+
 ## Liczby
 
 Wieża typów liczbowych (ang. numerical tower), nie każda implementacja języka
@@ -329,28 +334,34 @@ które potem zostaną wywołane. Można pisać programy, które piszą programy.
 Jest to główna siła mechanizmu, nazywana
 Makrami.
 
-
-### Drzewa
-### Listy Asociacyjne
-
-assoc
-
-### Cytowanie
-
+W jednej z poprzedniej sekcji zdefiniowaliśmy funkcje tree-map oraz replace.
+Dzięki nim można zmienić znaki + na - w wyrażeniu:
 
 ```scheme
-(define l '(1 2 3))
-(caddr l)
-(car (cdr (cdr l)))
+(define (funky code)
+  (tree-map (replace '+ '-) code))
+
+(eval (funky '(+ 10 (+ 10 2))))
+;; ==> 2
 ```
 
-## Eval
+Możemy napisać lepszą funkcję replace do której przekażemy listę
+asocjacyjną czyli Alistę.
+
 ```scheme
-(define s (list '+ 4 7))
-(eval s)
+(define (replace alist)
+   (lambda (atom)
+      (let ((pair (assoc atom alist)))
+         (if (pair? pair)
+             (cdr pair)
+             atom))))
+
+(define (funky code)
+  (tree-map (replace '((+ . -) (* . +))) code))
+
+(eval (funky '(+ 10 (* 2 3))))
+;; ==> 5
 ```
-
-
 
 ## Instrukcje warunkowe if
 
