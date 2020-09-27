@@ -500,7 +500,7 @@ let, lambda
 ```scheme
 (define (inc n)
   (lambda (x) (+ x n)))
-  
+
 (map (inc 10) (list 1 2 3))
 ```
 
@@ -510,7 +510,19 @@ let, lambda
 ```
 
 funkcja `inc` jest wyższego rzędu i dodatkowo
-jest to domknięcie leksykalne.
+jest to domknięcie leksykalne, ponieważ funkcja ma dostęp do zmiennej n,
+która jest zdefiniowana na zewnątrz funkcji lambda.
+
+Funkcję inc można także zapisać w ten sposbób:
+
+
+```scheme
+(define (inc n)
+   (define (fn x) (+ x n))
+   fn)
+```
+
+Ponieżej funkcja która zmienia zmienną która jest w domknięciu.
 
 ```scheme
 (define (counter)
@@ -521,20 +533,33 @@ jest to domknięcie leksykalne.
 
 (define counter_1 (counter))
 (counter_1)
+;; ==> 1
 (counter_1)
+;; ==> 2
 (define counter_2 (counter))
 (counter_2)
+;; ==> 1
 (counter_2)
+;; ==> 2
 (counter_2)
+;; ==> 3
 ```
 
-Funkcja która ma stan.
+Domknięcie jest to funkcja, która ma stan, który może zmianiać.
+Domknięcia działają podobnie do obiektów i klas w językach obiektowych.
 
-Wykrzyknik mówi że funkcja zmienia stan.
-Aby zwócić uwagę poniewarz ma skutki uboczne
-i nie jest to zwykła funkcja matematyczna.
+Zróć uwagę na wykrzyknik (w funkcji `set!`), mówi on, że funkcja zmienia coś.
+Trzeba na to zwracać uwagę używając takich fukcji ponieważ mają one skutki
+uboczne i nie są funkcjami matematycznymi (czyli nie są czystymi funkcjami).
+Ważne jest także (jest to taka konwencja) aby własne funkcje które mają
+skutki uboczne także oznaczać wykrzyknikiem.
 
-## Implementacja Par za pomocą funkcji
+### Implementacja Par za pomocą funkcji
+
+Dzięki domknięciom można stworzyć konstrukcje, które będą tworzyły pary (cons).
+Tak jak domyślna funkcja z języka Scheme. Oto przykła takiego kodu:
+
+
 ```scheme
 (define (mcons a b)
   (lambda (cmd)
@@ -549,6 +574,61 @@ i nie jest to zwykła funkcja matematyczna.
   (if (null? args)
       nil
       (mcons (car args) (apply mlist (cdr args)))))
+```
+
+Aby wyświetlić taką listę trzeba trochę więcej kodu:
+
+```scheme
+(define (any->string obj)
+  (cond ((number? obj) (number->string obj))
+        ((pair? obj) (pair->string obj))))
+
+(define (pair->string pair . rest)
+  (let ((nested (if (null? rest) #f (car rest))))
+    (if (null? pair)
+        (if nested
+            ""
+            "()")
+        (let* ((item (any->string (mcar pair)))
+               (rest (mcdr pair))
+               (sep (if (null? rest) "" " ")))
+          (if (not nested)
+              (string-append "("
+                             item
+                             sep
+                             (pair->string rest #t)
+                             ")")
+              (string-append item sep (pair->string rest nested)))))))
+```
+
+Zauważ że funkcja nie zadziała dla wyrażenia
+
+```scheme
+(pair->string (mcons 1 2))
+```
+
+Jako cwiczenie możesz spróbować dodać obsługę par, dzięki temu będzie można,
+wyświetlać dowolne trzewa binarne stworzone za pomocą komórek `mcons`.
+
+### Obiekty za pomocą domknięć
+
+```scheme
+(define (make-person name age)
+   (lambda (method . args)
+      (case method
+         ((get-name) name)
+         ((set-name) (set! name (car args)))
+         ((get-age) age)
+         ((set-age) (set! age (car args))))))
+
+(define P (make-person "John" 26))
+(P 'get-name)
+;; ==> "John"
+(P 'get-age)
+;; ==> 26
+(P 'set-name "Mike")
+(P 'get-name)
+;; ==> "Mike"
 ```
 
 ## Porty
