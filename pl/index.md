@@ -434,7 +434,7 @@ Przypuśćmy, że musimy napisać funkcje które podwoi elementy w liście:
 ;; => (1 4 6)
 ```
 
-Przypuśćmy że potem musimy napisać funkcje które podniesie funkcje do potęgi drugiej.
+Przypuśćmy że potem musimy napisać funkcje, które podniesie liczby do potęgi drugiej.
 
 ```scheme
 (define (square-list l)
@@ -457,7 +457,7 @@ Obie funkcje są prawie identyczne. Oto wygląd wzorca naszej funkcji:
 
 Można zapisać to jako funkcję, która przyjmuje funkcję jako argument.
 Funkcje które przyjmują inne funkcja jako argumenty i/lub zwracają funkcje
-nazywane są funkcjami wyższego rzędu, ponieważ operują na funkcja jak wartościach.
+nazywane są funkcjami wyższego rzędu, ponieważ operują na funkcja jak wartościach. Aby było to możliwe funkjce muszą być tzw. typem pierwszoklasowym, czyli zachowywać się jak inne typu np. liczby.
 
 Tak wygląda funkcja która generalizuje nasz wzorzec:
 
@@ -472,7 +472,7 @@ Tak wygląda funkcja która generalizuje nasz wzorzec:
 ```
 
 Ponieważ funkcja ta jest tak uniwersalna i użyteczna jest ona częścią języka Scheme.
-Wersja dostępna w scheme jest trochę bardziej rozbudowana ponieważ umożliwia
+Wersja dostępna w scheme jest trochę bardziej rozbudowana, ponieważ umożliwia
 przekazanie więcej niż jednej listy.
 
 ```scheme
@@ -511,8 +511,6 @@ Inne użyteczne funkcje wyższego rzędu:
             (iter (append result (list (car lst))) (cdr lst))
             (iter result (cdr lst))))))
 ```
-
-
 
 ## Środowiska i zmienne lokalne
 
