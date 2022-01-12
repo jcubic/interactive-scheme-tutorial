@@ -8,6 +8,6 @@
   "license": "CC-BY-SA",
   "dependencies": {
     "@jcubic/lily": "^0.1.0",
-    "markdown-it": "^10.0.0"
+    "markdown-it": "^12.3.2"
   }
 }
